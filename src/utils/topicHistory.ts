@@ -56,6 +56,10 @@ function normalizePromptValues(values: Partial<PromptFormValues>): PromptFormVal
   };
 }
 
+function getRecordKey(values: PromptFormValues): string {
+  return [values.topic.trim(), values.eventDate.trim()].join('::');
+}
+
 export function saveTopicHistoryRecord(values: PromptFormValues): TopicHistoryRecord[] {
   const normalizedValues = normalizePromptValues(values);
   const trimmedTopic = normalizedValues.topic.trim();
@@ -64,16 +68,46 @@ export function saveTopicHistoryRecord(values: PromptFormValues): TopicHistoryRe
     return loadTopicHistory();
   }
 
+  const currentHistory = loadTopicHistory();
+  const currentRecord = currentHistory.find(
+    (record) =>
+      getRecordKey(record.values ?? { ...defaultPromptValues, topic: record.topic }) ===
+      getRecordKey(normalizedValues)
+  );
   const nextRecord: TopicHistoryRecord = {
-    id: `${Date.now()}`,
+    id: currentRecord?.id ?? `${Date.now()}`,
     topic: trimmedTopic,
     createdAt: new Date().toISOString(),
     values: normalizedValues,
   };
 
-  const nextHistory = [nextRecord, ...loadTopicHistory()].slice(0, MAX_HISTORY_COUNT);
+  const nextHistory = [
+    nextRecord,
+    ...currentHistory.filter((record) => record.id !== nextRecord.id),
+  ].slice(0, MAX_HISTORY_COUNT);
 
   window.localStorage.setItem(TOPIC_HISTORY_KEY, JSON.stringify(nextHistory));
 
   return nextHistory;
+}
+
+export function deleteTopicHistoryRecord(recordId: string): TopicHistoryRecord[] {
+  if (!canUseLocalStorage()) {
+    return [];
+  }
+
+  const nextHistory = loadTopicHistory().filter((record) => record.id !== recordId);
+  window.localStorage.setItem(TOPIC_HISTORY_KEY, JSON.stringify(nextHistory));
+
+  return nextHistory;
+}
+
+export function clearTopicHistory(): TopicHistoryRecord[] {
+  if (!canUseLocalStorage()) {
+    return [];
+  }
+
+  window.localStorage.removeItem(TOPIC_HISTORY_KEY);
+
+  return [];
 }

@@ -6,7 +6,12 @@ import { defaultPromptValues, exampleTopics } from './constants/options';
 import type { PromptFormValues, TopicHistoryRecord } from './types/prompt';
 import { copyToClipboard } from './utils/copyToClipboard';
 import { generatePrompt } from './utils/generatePrompt';
-import { loadTopicHistory, saveTopicHistoryRecord } from './utils/topicHistory';
+import {
+  clearTopicHistory,
+  deleteTopicHistoryRecord,
+  loadTopicHistory,
+  saveTopicHistoryRecord,
+} from './utils/topicHistory';
 
 interface ReferenceImagePreview {
   id: string;
@@ -64,6 +69,14 @@ function App() {
     setErrorMessage('');
     setCopied(false);
     setReferenceImagePreviews([]);
+  };
+
+  const handleDeleteHistory = (recordId: string) => {
+    setTopicHistory(deleteTopicHistoryRecord(recordId));
+  };
+
+  const handleClearHistory = () => {
+    setTopicHistory(clearTopicHistory());
   };
 
   const handleReferenceImagesAdd = (files: File[]) => {
@@ -158,6 +171,8 @@ function App() {
         onReferenceImagesClear={handleReferenceImagesClear}
         onSelectTopic={handleSelectTopic}
         onSelectHistory={handleSelectHistory}
+        onDeleteHistory={handleDeleteHistory}
+        onClearHistory={handleClearHistory}
         onSubmit={handleGeneratePrompt}
         onReset={handleReset}
       />

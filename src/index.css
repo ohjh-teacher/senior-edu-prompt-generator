@@ -358,6 +358,12 @@ textarea:focus {
   gap: 8px;
 }
 
+.history-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .history-help,
 .field-help {
   color: var(--text-muted);

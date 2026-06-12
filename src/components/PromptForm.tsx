@@ -7,7 +7,7 @@ import {
   pageCountOptions,
   purposeOptions,
 } from '../constants/options';
-import type { DragEvent } from 'react';
+import { useState, type DragEvent } from 'react';
 import type { PromptFormValues, TopicHistoryRecord } from '../types/prompt';
 import { ExampleTopics } from './ExampleTopics';
 
@@ -32,6 +32,8 @@ interface PromptFormProps {
   onReferenceImagesClear: () => void;
   onSelectTopic: (topic: string) => void;
   onSelectHistory: (record: TopicHistoryRecord) => void;
+  onDeleteHistory: (recordId: string) => void;
+  onClearHistory: () => void;
   onSubmit: () => void;
   onReset: () => void;
 }
@@ -57,9 +59,12 @@ export function PromptForm({
   onReferenceImagesClear,
   onSelectTopic,
   onSelectHistory,
+  onDeleteHistory,
+  onClearHistory,
   onSubmit,
   onReset,
 }: PromptFormProps) {
+  const [selectedHistoryId, setSelectedHistoryId] = useState('');
   const showPosterFields = values.materialType === '홍보 포스터';
 
   const formatHistoryDate = (createdAt: string) =>
@@ -202,17 +207,15 @@ export function PromptForm({
             </label>
             <select
               id="topic-history-select"
-              defaultValue=""
+              value={selectedHistoryId}
               onChange={(event) => {
-                const selectedRecord = topicHistory.find(
-                  (record) => record.id === event.target.value
-                );
+                const nextHistoryId = event.target.value;
+                const selectedRecord = topicHistory.find((record) => record.id === nextHistoryId);
 
                 if (selectedRecord) {
                   onSelectHistory(selectedRecord);
+                  setSelectedHistoryId(nextHistoryId);
                 }
-
-                event.target.value = '';
               }}
             >
               <option value="">저장된 주제 불러오기</option>
@@ -222,6 +225,37 @@ export function PromptForm({
                 </option>
               ))}
             </select>
+            <div className="history-actions">
+              <button
+                className="text-button"
+                type="button"
+                disabled={!selectedHistoryId}
+                onClick={() => {
+                  if (!selectedHistoryId) {
+                    return;
+                  }
+
+                  if (window.confirm('선택한 최근 입력 기록을 삭제할까요?')) {
+                    onDeleteHistory(selectedHistoryId);
+                    setSelectedHistoryId('');
+                  }
+                }}
+              >
+                선택 기록 삭제
+              </button>
+              <button
+                className="text-button"
+                type="button"
+                onClick={() => {
+                  if (window.confirm('최근 입력 기록을 모두 삭제할까요?')) {
+                    onClearHistory();
+                    setSelectedHistoryId('');
+                  }
+                }}
+              >
+                전체 기록 삭제
+              </button>
+            </div>
             <p className="history-help">
               프롬프트를 만들 때마다 주제와 입력일시가 이 브라우저에 저장됩니다.
             </p>
