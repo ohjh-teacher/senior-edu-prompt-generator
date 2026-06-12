@@ -7,7 +7,7 @@ import {
   pageCountOptions,
   purposeOptions,
 } from '../constants/options';
-import { useState, type DragEvent } from 'react';
+import type { DragEvent } from 'react';
 import type { PromptFormValues, TopicHistoryRecord } from '../types/prompt';
 import { ExampleTopics } from './ExampleTopics';
 
@@ -64,7 +64,6 @@ export function PromptForm({
   onSubmit,
   onReset,
 }: PromptFormProps) {
-  const [selectedHistoryId, setSelectedHistoryId] = useState('');
   const showPosterFields = values.materialType === '홍보 포스터';
 
   const formatHistoryDate = (createdAt: string) =>
@@ -202,54 +201,38 @@ export function PromptForm({
 
         {topicHistory.length > 0 && (
           <section className="history-section" aria-labelledby="topic-history-title">
-            <label id="topic-history-title" htmlFor="topic-history-select">
-              최근 입력 기록
-            </label>
-            <select
-              id="topic-history-select"
-              value={selectedHistoryId}
-              onChange={(event) => {
-                const nextHistoryId = event.target.value;
-                const selectedRecord = topicHistory.find((record) => record.id === nextHistoryId);
-
-                if (selectedRecord) {
-                  onSelectHistory(selectedRecord);
-                  setSelectedHistoryId(nextHistoryId);
-                }
-              }}
-            >
-              <option value="">저장된 주제 불러오기</option>
+            <label id="topic-history-title">최근 입력 기록</label>
+            <div className="history-list" aria-labelledby="topic-history-title">
               {topicHistory.map((record) => (
-                <option key={record.id} value={record.id}>
-                  {formatHistoryLabel(record)}
-                </option>
+                <div className="history-item" key={record.id}>
+                  <button
+                    className="history-delete-button"
+                    type="button"
+                    onClick={() => {
+                      if (window.confirm('이 최근 입력 기록을 삭제할까요?')) {
+                        onDeleteHistory(record.id);
+                      }
+                    }}
+                  >
+                    삭제
+                  </button>
+                  <button
+                    className="history-load-button"
+                    type="button"
+                    onClick={() => onSelectHistory(record)}
+                  >
+                    {formatHistoryLabel(record)}
+                  </button>
+                </div>
               ))}
-            </select>
+            </div>
             <div className="history-actions">
-              <button
-                className="text-button"
-                type="button"
-                disabled={!selectedHistoryId}
-                onClick={() => {
-                  if (!selectedHistoryId) {
-                    return;
-                  }
-
-                  if (window.confirm('선택한 최근 입력 기록을 삭제할까요?')) {
-                    onDeleteHistory(selectedHistoryId);
-                    setSelectedHistoryId('');
-                  }
-                }}
-              >
-                선택 기록 삭제
-              </button>
               <button
                 className="text-button"
                 type="button"
                 onClick={() => {
                   if (window.confirm('최근 입력 기록을 모두 삭제할까요?')) {
                     onClearHistory();
-                    setSelectedHistoryId('');
                   }
                 }}
               >

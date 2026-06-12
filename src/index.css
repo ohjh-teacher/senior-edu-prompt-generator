@@ -358,6 +358,46 @@ textarea:focus {
   gap: 8px;
 }
 
+.history-list {
+  display: grid;
+  gap: 8px;
+}
+
+.history-item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: stretch;
+  gap: 8px;
+}
+
+.history-delete-button,
+.history-load-button {
+  border-radius: 8px;
+  border: 1px solid #c8dbe8;
+  background: #ffffff;
+  color: #24445f;
+  font-weight: 800;
+  min-height: 42px;
+}
+
+.history-delete-button {
+  color: var(--danger);
+  padding: 0 12px;
+}
+
+.history-load-button {
+  overflow-wrap: anywhere;
+  padding: 9px 12px;
+  text-align: left;
+  line-height: 1.45;
+}
+
+.history-load-button:hover,
+.history-load-button:focus-visible {
+  border-color: var(--blue-600);
+  background: var(--blue-050);
+}
+
 .history-actions {
   display: flex;
   flex-wrap: wrap;
