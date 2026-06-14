@@ -7,7 +7,7 @@ import {
   pageCountOptions,
   purposeOptions,
 } from '../constants/options';
-import type { DragEvent } from 'react';
+import { useState, type DragEvent } from 'react';
 import type { PromptFormValues, TopicHistoryRecord } from '../types/prompt';
 import { ExampleTopics } from './ExampleTopics';
 
@@ -49,6 +49,7 @@ const workflowSteps = ['주제 입력', '수업 정보', '프롬프트 생성', 
 const minEventTime = '09:00';
 const maxEventTime = '22:00';
 const timeStepSeconds = 600;
+const visibleHistoryCount = 3;
 
 function normalizeEventTime(value: string): string {
   if (!value) {
@@ -91,7 +92,12 @@ export function PromptForm({
   onSubmit,
   onReset,
 }: PromptFormProps) {
+  const [showAllHistory, setShowAllHistory] = useState(false);
   const showPosterFields = values.materialType === '홍보 포스터';
+  const visibleTopicHistory = showAllHistory
+    ? topicHistory
+    : topicHistory.slice(0, visibleHistoryCount);
+  const hiddenHistoryCount = Math.max(0, topicHistory.length - visibleHistoryCount);
 
   const formatHistoryDate = (createdAt: string) =>
     new Intl.DateTimeFormat('ko-KR', {
@@ -230,7 +236,7 @@ export function PromptForm({
           <section className="history-section" aria-labelledby="topic-history-title">
             <label id="topic-history-title">최근 입력 기록</label>
             <div className="history-list" aria-labelledby="topic-history-title">
-              {topicHistory.map((record) => (
+              {visibleTopicHistory.map((record) => (
                 <div className="history-item" key={record.id}>
                   <button
                     className="history-delete-button"
@@ -254,6 +260,17 @@ export function PromptForm({
               ))}
             </div>
             <div className="history-actions">
+              {hiddenHistoryCount > 0 && (
+                <button
+                  className="text-button"
+                  type="button"
+                  onClick={() => setShowAllHistory((currentValue) => !currentValue)}
+                >
+                  {showAllHistory
+                    ? '최근 기록 접기'
+                    : `전체 기록 보기 ${topicHistory.length}개`}
+                </button>
+              )}
               <button
                 className="text-button"
                 type="button"
