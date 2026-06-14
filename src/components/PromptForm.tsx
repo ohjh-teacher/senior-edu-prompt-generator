@@ -203,7 +203,7 @@ export function PromptForm({
               <p>이미지를 여러 장 끌어다 놓거나 파일을 선택하세요</p>
             </div>
             <p className="field-help">
-              수업 결과 이미지나 참고 화면을 여러 장 넣으면 프롬프트에 참고 이미지 안내가 추가됩니다.
+              오정화 강사 캐릭터, 수업 결과 이미지, 참고 화면을 여러 장 넣으면 프롬프트에 참고 이미지 안내가 추가됩니다.
             </p>
             {referenceImagePreviews.length > 0 && (
               <div className="reference-image-preview-list">

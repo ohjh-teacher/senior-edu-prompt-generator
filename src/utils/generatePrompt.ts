@@ -44,6 +44,9 @@ function formatTime(value: string): string {
   return `${period} ${twelveHour}시${minuteLabel}`;
 }
 
+const instructorCharacterPrompt =
+  '이미지에는 오정화 강사 캐릭터가 설명하고 알려주는 모습으로 등장한다. 강사 캐릭터는 짧은 갈색 단발머리, 둥근 안경, 큰 눈, 부드러운 미소, 남색 상하의, 목걸이, 손에 포인터를 든 따뜻한 디지털 강사 스타일이다. 시니어 어르신은 주인공이 아니라 수업을 듣거나 따라 하는 학습자로 필요한 경우에만 보조적으로 표현한다.';
+
 export function generatePrompt(values: PromptFormValues): string {
   const topic = values.topic.trim();
   const referenceImageNames = values.referenceImageNames
@@ -90,7 +93,8 @@ ${values.audience}도 쉽게 이해할 수 있도록 큰 아이콘과 짧은 문
 ${pageInstruction}
 흰 배경, ${values.colorTone} 색감, 큼직한 버튼형 레이아웃, ${usageLabel}용 자료.
 친절하고 따뜻한 분위기, 복잡한 장식 없이 가독성 높은 디자인, ${values.aspectRatio}.
-${referenceImageLabel ? `첨부한 참고 이미지(${referenceImageLabel})의 핵심 화면, 아이콘, 분위기를 참고하되 글자는 새로 정확하게 구성한다.` : ''}
+${instructorCharacterPrompt}
+${referenceImageLabel ? `첨부한 참고 이미지(${referenceImageLabel})가 강사 캐릭터 이미지라면 캐릭터의 얼굴, 헤어스타일, 안경, 의상 분위기를 우선 참고한다. 그 밖의 참고 이미지는 핵심 화면, 아이콘, 분위기를 참고하되 글자는 새로 정확하게 구성한다.` : ''}
 
 결과물 하단 또는 잘 보이는 영역에 아래 수업 정보를 정확히 표시한다.
 ${commonClassInfo.length > 0 ? commonClassInfo.join('\n') : '입력된 수업 정보 없음'}
