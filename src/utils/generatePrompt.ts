@@ -54,18 +54,19 @@ export function generatePrompt(values: PromptFormValues): string {
   const purpose = values.purpose.trim();
   const usageLabel = [institutionName, purpose].filter(Boolean).join(' ');
   const pageCount = values.pageCount === 2 ? 2 : 1;
-  const stepLabels = Array.from(
+  const materialTypeLabel = values.materialType.replace('단계별', '번호형');
+  const itemLabels = Array.from(
     { length: values.stepCount },
-    (_, index) => `${index + 1}단계`
+    (_, index) => `${index + 1}`
   ).join(', ');
   const pageInstruction =
     pageCount === 2
       ? `전체 내용을 2페이지 인포그래픽으로 구성한다.
-1페이지에는 앞부분 단계를, 2페이지에는 나머지 단계를 배치한다.
-각 페이지의 단계 수가 비슷하도록 나누고, 각 페이지 하단에 "1/2", "2/2" 페이지 표시를 넣는다.
+1페이지에는 앞쪽 번호 항목을, 2페이지에는 나머지 번호 항목을 배치한다.
+각 페이지의 항목 수가 비슷하도록 나누고, 각 페이지 하단에 "1/2", "2/2" 페이지 표시를 넣는다.
 두 페이지는 같은 디자인 톤과 레이아웃 규칙을 유지한다.`
       : `전체 내용을 1페이지 인포그래픽으로 구성한다.
-글자가 작아지지 않도록 각 단계 문장은 짧게 유지하고 충분한 여백을 둔다.`;
+글자가 작아지지 않도록 각 항목 문장은 짧게 유지하고 충분한 여백을 둔다.`;
   const classDateTime = [formatDate(values.eventDate), formatTime(values.eventTime)]
     .filter(Boolean)
     .join(' ');
@@ -82,9 +83,10 @@ export function generatePrompt(values: PromptFormValues): string {
     compactInfo('추가 안내', values.posterNote),
   ].filter(Boolean);
 
-  const basePrompt = `${topic}을/를 ${values.stepCount}단계로 설명하는 ${values.materialType}.
+  const basePrompt = `${topic}을/를 ${values.stepCount}개 번호로 설명하는 ${materialTypeLabel}.
 ${values.audience}도 쉽게 이해할 수 있도록 큰 아이콘과 짧은 문장을 사용한다.
-각 단계는 한눈에 보이도록 번호와 간단한 행동 중심 문장으로 구성한다. 단계 표현: ${stepLabels}.
+각 항목은 한눈에 보이도록 번호와 간단한 행동 중심 문장으로 구성한다. 번호 표현: ${itemLabels}.
+결과물의 번호 표시는 "1", "2"처럼 숫자만 사용한다.
 ${pageInstruction}
 흰 배경, ${values.colorTone} 색감, 큼직한 버튼형 레이아웃, ${usageLabel}용 자료.
 친절하고 따뜻한 분위기, 복잡한 장식 없이 가독성 높은 디자인, ${values.aspectRatio}.
