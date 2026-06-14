@@ -46,33 +46,29 @@ const colorSwatches: Record<string, string> = {
 };
 
 const workflowSteps = ['주제 입력', '수업 정보', '프롬프트 생성', 'AI로 제작'];
-const minEventTime = '09:00';
-const maxEventTime = '22:00';
-const timeStepSeconds = 600;
+const eventHourOptions = Array.from({ length: 14 }, (_, index) =>
+  String(index + 9).padStart(2, '0')
+);
+const eventMinuteOptions = ['00', '10', '20', '30', '40', '50'];
 const visibleHistoryCount = 3;
 
-function normalizeEventTime(value: string): string {
+function getEventTimePart(value: string, part: 'hour' | 'minute'): string {
   if (!value) {
     return '';
   }
 
   const [hourValue, minuteValue] = value.split(':');
-  const hour = Number(hourValue);
-  const minute = Number(minuteValue);
 
-  if (Number.isNaN(hour) || Number.isNaN(minute)) {
-    return value;
-  }
+  return part === 'hour' ? hourValue : minuteValue;
+}
 
-  const roundedMinute = Math.round(minute / 10) * 10;
-  const totalMinutes = hour * 60 + roundedMinute;
-  const minMinutes = 9 * 60;
-  const maxMinutes = 22 * 60;
-  const clampedMinutes = Math.min(maxMinutes, Math.max(minMinutes, totalMinutes));
-  const nextHour = Math.floor(clampedMinutes / 60);
-  const nextMinute = clampedMinutes % 60;
+function combineEventTime(currentValue: string, part: 'hour' | 'minute', nextValue: string): string {
+  const currentHour = getEventTimePart(currentValue, 'hour') || eventHourOptions[0];
+  const currentMinute = getEventTimePart(currentValue, 'minute') || eventMinuteOptions[0];
+  const nextHour = part === 'hour' ? nextValue : currentHour;
+  const nextMinute = part === 'minute' ? nextValue : currentMinute;
 
-  return `${String(nextHour).padStart(2, '0')}:${String(nextMinute).padStart(2, '0')}`;
+  return `${nextHour}:${nextMinute}`;
 }
 
 export function PromptForm({
@@ -305,18 +301,52 @@ export function PromptForm({
               />
             </div>
             <div className="field">
-              <label htmlFor="event-time">수업 시간</label>
-              <input
-                id="event-time"
-                type="time"
-                min={minEventTime}
-                max={maxEventTime}
-                step={timeStepSeconds}
-                value={values.eventTime}
-                onChange={(event) =>
-                  onChange('eventTime', normalizeEventTime(event.target.value))
-                }
-              />
+              <span className="field-label">수업 시간</span>
+              <div className="time-select-group" role="group" aria-labelledby="event-time-label">
+                <span className="sr-only" id="event-time-label">
+                  수업 시간
+                </span>
+                <label htmlFor="event-hour" className="sr-only">
+                  시
+                </label>
+                <select
+                  id="event-hour"
+                  value={getEventTimePart(values.eventTime, 'hour')}
+                  onChange={(event) =>
+                    onChange(
+                      'eventTime',
+                      combineEventTime(values.eventTime, 'hour', event.target.value)
+                    )
+                  }
+                >
+                  <option value="">시</option>
+                  {eventHourOptions.map((hour) => (
+                    <option key={hour} value={hour}>
+                      {hour}시
+                    </option>
+                  ))}
+                </select>
+                <label htmlFor="event-minute" className="sr-only">
+                  분
+                </label>
+                <select
+                  id="event-minute"
+                  value={getEventTimePart(values.eventTime, 'minute')}
+                  onChange={(event) =>
+                    onChange(
+                      'eventTime',
+                      combineEventTime(values.eventTime, 'minute', event.target.value)
+                    )
+                  }
+                >
+                  <option value="">분</option>
+                  {eventMinuteOptions.map((minute) => (
+                    <option key={minute} value={minute}>
+                      {minute}분
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
             <div className="field">
               <label htmlFor="instructor-name">강사명</label>
