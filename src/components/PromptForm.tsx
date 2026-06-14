@@ -46,6 +46,33 @@ const colorSwatches: Record<string, string> = {
 };
 
 const workflowSteps = ['주제 입력', '수업 정보', '프롬프트 생성', 'AI로 제작'];
+const minEventTime = '09:00';
+const maxEventTime = '22:00';
+const timeStepSeconds = 600;
+
+function normalizeEventTime(value: string): string {
+  if (!value) {
+    return '';
+  }
+
+  const [hourValue, minuteValue] = value.split(':');
+  const hour = Number(hourValue);
+  const minute = Number(minuteValue);
+
+  if (Number.isNaN(hour) || Number.isNaN(minute)) {
+    return value;
+  }
+
+  const roundedMinute = Math.round(minute / 10) * 10;
+  const totalMinutes = hour * 60 + roundedMinute;
+  const minMinutes = 9 * 60;
+  const maxMinutes = 22 * 60;
+  const clampedMinutes = Math.min(maxMinutes, Math.max(minMinutes, totalMinutes));
+  const nextHour = Math.floor(clampedMinutes / 60);
+  const nextMinute = clampedMinutes % 60;
+
+  return `${String(nextHour).padStart(2, '0')}:${String(nextMinute).padStart(2, '0')}`;
+}
 
 export function PromptForm({
   values,
@@ -265,8 +292,13 @@ export function PromptForm({
               <input
                 id="event-time"
                 type="time"
+                min={minEventTime}
+                max={maxEventTime}
+                step={timeStepSeconds}
                 value={values.eventTime}
-                onChange={(event) => onChange('eventTime', event.target.value)}
+                onChange={(event) =>
+                  onChange('eventTime', normalizeEventTime(event.target.value))
+                }
               />
             </div>
             <div className="field">
