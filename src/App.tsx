@@ -30,7 +30,7 @@ function App() {
   >([]);
 
   useEffect(() => {
-    setTopicHistory(loadTopicHistory());
+    void loadTopicHistory().then(setTopicHistory);
   }, []);
 
   useEffect(() => {
@@ -72,11 +72,11 @@ function App() {
   };
 
   const handleDeleteHistory = (recordId: string) => {
-    setTopicHistory(deleteTopicHistoryRecord(recordId));
+    void deleteTopicHistoryRecord(recordId).then(setTopicHistory);
   };
 
   const handleClearHistory = () => {
-    setTopicHistory(clearTopicHistory());
+    void clearTopicHistory().then(setTopicHistory);
   };
 
   const handleReferenceImagesAdd = (files: File[]) => {
@@ -139,7 +139,7 @@ function App() {
     }
 
     setErrorMessage('');
-    setTopicHistory(saveTopicHistoryRecord(formValues));
+    void saveTopicHistoryRecord(formValues).then(setTopicHistory);
     setGeneratedPrompt(generatePrompt(formValues));
   };
 
