@@ -14,8 +14,8 @@ Error generating stack: `+e.message+`
 페이지 전체의 밀도와 시각적 무게를 균형 있게 유지한다.
 특정 영역에 내용이 몰리지 않도록 배치한다.
 충분한 여백을 확보하여 답답하지 않게 구성한다.
-모든 항목은 동일한 수준의 가독성을 유지한다.`;function ye(e){let t=e.topic.trim(),n=e.referenceImageNames.map(e=>e.trim()).filter(Boolean).join(`, `),r=[e.institutionName.trim(),e.purpose.trim()].filter(Boolean).join(` `),i=e.pageCount===2?2:1,a=e.materialType.replace(`단계별`,`번호형`),o=Math.ceil(e.stepCount/2),s=o+1,c=o===1?`1번`:`1~${o}번`,l=s===e.stepCount?`${s}번`:`${s}~${e.stepCount}번`,u=Array.from({length:e.stepCount},(e,t)=>`${t+1}`).join(`, `),d=i===2?`[매우 중요]
-총 2장의 이미지를 생성한다.
+모든 항목은 동일한 수준의 가독성을 유지한다.`;function ye(e){let t=e.topic.trim(),n=e.referenceImageNames.map(e=>e.trim()).filter(Boolean).join(`, `),r=[e.institutionName.trim(),e.purpose.trim()].filter(Boolean).join(` `),i=e.pageCount===2?2:1,a=e.materialType.replace(`단계별`,`번호형`),o=Math.ceil(e.stepCount/2),s=o+1,c=o===1?`1번`:`1~${o}번`,l=s===e.stepCount?`${s}번`:`${s}~${e.stepCount}번`,u=Array.from({length:e.stepCount},(e,t)=>`${t+1}`).join(`, `),d=i===2?`[매우 중요: 2페이지 제작 규칙]
+총 2장의 이미지를 각각 독립된 완성본으로 생성한다.
 
 이미지 1:
 1페이지(1/2) 전용.
@@ -27,17 +27,11 @@ ${l}은 절대 넣지 않는다.
 ${l}만 포함한다.
 ${c}은 절대 넣지 않는다.
 
-각 이미지는 독립적인 완성본이어야 한다.
+[금지]
 하나의 이미지 안에 1/2와 2/2를 함께 배치하는 것을 금지한다.
 위아래로 연결된 긴 이미지를 만드는 것을 금지한다.
 
-[중요 제작 규칙]
-1페이지(1/2)와 2페이지(2/2)는 서로 독립된 별도 이미지 파일로 제작한다.
-이미지 1은 1페이지(1/2)만 포함한다.
-이미지 2는 2페이지(2/2)만 포함한다.
-
-1페이지에는 앞쪽 번호 항목을, 2페이지에는 나머지 번호 항목을 배치한다.
-각 페이지의 항목 수가 비슷하도록 나누고, 각 페이지 하단에 각각 "1/2", "2/2" 페이지 표시를 넣는다.
+각 페이지 하단에는 각각 "1/2", "2/2" 페이지 표시를 넣는다.
 두 페이지는 같은 디자인 톤과 레이아웃 규칙을 유지한다.
 ${ve}`:`전체 내용을 1페이지 인포그래픽으로 구성한다.
 글자가 작아지지 않도록 각 항목 문장은 짧게 유지하고 충분한 여백을 둔다.
