@@ -68,17 +68,39 @@ export function generatePrompt(values: PromptFormValues): string {
   const usageLabel = [institutionName, purpose].filter(Boolean).join(' ');
   const pageCount = values.pageCount === 2 ? 2 : 1;
   const materialTypeLabel = values.materialType.replace('단계별', '번호형');
+  const firstPageEndNumber = Math.ceil(values.stepCount / 2);
+  const secondPageStartNumber = firstPageEndNumber + 1;
+  const firstPageRangeLabel =
+    firstPageEndNumber === 1 ? '1번' : `1~${firstPageEndNumber}번`;
+  const secondPageRangeLabel =
+    secondPageStartNumber === values.stepCount
+      ? `${secondPageStartNumber}번`
+      : `${secondPageStartNumber}~${values.stepCount}번`;
   const itemLabels = Array.from(
     { length: values.stepCount },
     (_, index) => `${index + 1}`
   ).join(', ');
   const pageInstruction =
     pageCount === 2
-      ? `[중요 제작 규칙]
-반드시 이미지 2장을 각각 생성한다.
+      ? `[매우 중요]
+총 2장의 이미지를 생성한다.
+
+이미지 1:
+1페이지(1/2) 전용.
+${firstPageRangeLabel}만 포함한다.
+${secondPageRangeLabel}은 절대 넣지 않는다.
+
+이미지 2:
+2페이지(2/2) 전용.
+${secondPageRangeLabel}만 포함한다.
+${firstPageRangeLabel}은 절대 넣지 않는다.
+
+각 이미지는 독립적인 완성본이어야 한다.
+하나의 이미지 안에 1/2와 2/2를 함께 배치하는 것을 금지한다.
+위아래로 연결된 긴 이미지를 만드는 것을 금지한다.
+
+[중요 제작 규칙]
 1페이지(1/2)와 2페이지(2/2)는 서로 독립된 별도 이미지 파일로 제작한다.
-하나의 긴 이미지 안에 1/2와 2/2를 함께 배치하지 않는다.
-위아래로 연결된 스크롤형 이미지로 제작하지 않는다.
 이미지 1은 1페이지(1/2)만 포함한다.
 이미지 2는 2페이지(2/2)만 포함한다.
 
