@@ -14,7 +14,8 @@ Error generating stack: `+e.message+`
 페이지 전체의 밀도와 시각적 무게를 균형 있게 유지한다.
 특정 영역에 내용이 몰리지 않도록 배치한다.
 충분한 여백을 확보하여 답답하지 않게 구성한다.
-모든 항목은 동일한 수준의 가독성을 유지한다.`;function ye(e){let t=e.topic.trim(),n=e.referenceImageNames.map(e=>e.trim()).filter(Boolean).join(`, `),r=[e.institutionName.trim(),e.purpose.trim()].filter(Boolean).join(` `),i=e.pageCount===2?2:1,a=e.materialType.replace(`단계별`,`번호형`),o=Math.ceil(e.stepCount/2),s=o+1,c=o===1?`1번`:`1~${o}번`,l=s===e.stepCount?`${s}번`:`${s}~${e.stepCount}번`,u=Array.from({length:e.stepCount},(e,t)=>`${t+1}`).join(`, `),d=i===2?`[매우 중요: 2페이지 제작 규칙]
+모든 항목은 동일한 수준의 가독성을 유지한다.`;function ye(e){let t=e.topic.trim().split(/\r?\n/).map(e=>e.trim()).filter(Boolean).map(e=>`- ${e}`).join(`
+`),n=e.referenceImageNames.map(e=>e.trim()).filter(Boolean).join(`, `),r=[e.institutionName.trim(),e.purpose.trim()].filter(Boolean).join(` `),i=e.pageCount===2?2:1,a=e.materialType.replace(`단계별`,`번호형`),o=Math.ceil(e.stepCount/2),s=o+1,c=o===1?`1번`:`1~${o}번`,l=s===e.stepCount?`${s}번`:`${s}~${e.stepCount}번`,u=Array.from({length:e.stepCount},(e,t)=>`${t+1}`).join(`, `),d=i===2?`[매우 중요: 2페이지 제작 규칙]
 총 2장의 이미지를 각각 독립된 완성본으로 생성한다.
 
 이미지 1:
@@ -35,7 +36,11 @@ ${c}은 절대 넣지 않는다.
 두 페이지는 같은 디자인 톤과 레이아웃 규칙을 유지한다.
 ${ve}`:`전체 내용을 1페이지 인포그래픽으로 구성한다.
 글자가 작아지지 않도록 각 항목 문장은 짧게 유지하고 충분한 여백을 둔다.
-${ve}`,f=[he(e.eventDate),ge(e.eventTime)].filter(Boolean).join(` `),p=e.materialType===`홍보 포스터`,m=[O(`수업 일자`,f),O(`강사명`,e.instructorName),O(`기관명`,e.institutionName)].filter(Boolean),h=[...m,O(`장소`,e.eventPlace),O(`문의`,e.contactInfo),O(`추가 안내`,e.posterNote)].filter(Boolean),g=`${t}을/를 ${e.stepCount}개 번호로 설명하는 ${a}.
+${ve}`,f=[he(e.eventDate),ge(e.eventTime)].filter(Boolean).join(` `),p=e.materialType===`홍보 포스터`,m=[O(`수업 일자`,f),O(`강사명`,e.instructorName),O(`기관명`,e.institutionName)].filter(Boolean),h=[...m,O(`장소`,e.eventPlace),O(`문의`,e.contactInfo),O(`추가 안내`,e.posterNote)].filter(Boolean),g=`다음 수업 내용을 ${e.stepCount}개 번호로 설명하는 ${a}.
+
+수업 내용:
+${t}
+
 ${e.audience}도 쉽게 이해할 수 있도록 큰 아이콘과 짧은 문장을 사용한다.
 각 항목은 한눈에 보이도록 번호와 간단한 행동 중심 문장으로 구성한다. 번호 표현: ${u}.
 결과물의 번호 표시는 "1", "2"처럼 숫자만 사용한다.
