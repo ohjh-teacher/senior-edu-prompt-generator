@@ -59,6 +59,11 @@ const balancedLayoutPrompt = `[레이아웃 규칙]
 
 export function generatePrompt(values: PromptFormValues): string {
   const topic = values.topic.trim();
+  const topicItems = topic
+    .split(/\r?\n/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+  const topicList = topicItems.map((item) => `- ${item}`).join('\n');
   const referenceImageNames = values.referenceImageNames
     .map((name) => name.trim())
     .filter(Boolean);
@@ -121,7 +126,11 @@ ${balancedLayoutPrompt}`;
     compactInfo('추가 안내', values.posterNote),
   ].filter(Boolean);
 
-  const basePrompt = `${topic}을/를 ${values.stepCount}개 번호로 설명하는 ${materialTypeLabel}.
+  const basePrompt = `다음 수업 내용을 ${values.stepCount}개 번호로 설명하는 ${materialTypeLabel}.
+
+수업 내용:
+${topicList}
+
 ${values.audience}도 쉽게 이해할 수 있도록 큰 아이콘과 짧은 문장을 사용한다.
 각 항목은 한눈에 보이도록 번호와 간단한 행동 중심 문장으로 구성한다. 번호 표현: ${itemLabels}.
 결과물의 번호 표시는 "1", "2"처럼 숫자만 사용한다.
