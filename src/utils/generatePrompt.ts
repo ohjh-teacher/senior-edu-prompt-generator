@@ -113,7 +113,7 @@ ${pageInstruction}
 흰 배경, ${values.colorTone} 색감, 큼직한 버튼형 레이아웃, ${usageLabel}용 자료.
 친절하고 따뜻한 분위기, 복잡한 장식 없이 가독성 높은 디자인, ${values.aspectRatio}.
 ${instructorCharacterPrompt}
-${referenceImageLabel ? `첨부한 참고 이미지(${referenceImageLabel})가 강사 캐릭터 이미지라면 캐릭터의 얼굴, 헤어스타일, 안경, 의상 분위기를 우선 참고한다. 그 밖의 참고 이미지는 핵심 화면, 아이콘, 분위기를 참고하되 글자는 새로 정확하게 구성한다.` : ''}
+${referenceImageLabel ? `첨부한 참고 이미지(${referenceImageLabel})는 교재, 수업 자료, 화면 예시로 간주한다. 첨부 이미지의 핵심 화면 구성, 단계 흐름, 아이콘, 버튼 위치, 설명 순서를 참고한다. 단, 첨부 이미지의 글자는 그대로 복사하지 말고 현재 수업 주제와 입력 정보에 맞게 정확하고 크게 다시 구성한다.` : ''}
 
 결과물 하단 또는 잘 보이는 영역에 아래 수업 정보를 정확히 표시한다.
 ${commonClassInfo.length > 0 ? commonClassInfo.join('\n') : '입력된 수업 정보 없음'}
